@@ -13,15 +13,15 @@
  */
 package ch.qos.logback.core.util;
 
+import ch.qos.logback.core.Context;
+
 import java.io.IOException;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Enumeration;
-import java.util.Set;
 import java.util.HashSet;
-
-import ch.qos.logback.core.Context;
+import java.util.Set;
 
 /**
  * Load resources (or images) from various sources.
@@ -122,7 +122,13 @@ public class Loader {
   public static Class<?> loadClass(String clazz, Context context)
           throws ClassNotFoundException {
     ClassLoader cl = getClassLoaderOfObject(context);
-    return cl.loadClass(clazz);
+
+    try {
+      return cl.loadClass(clazz);
+    } catch (ClassNotFoundException c) {
+      //try from tcl
+      return getTCL().loadClass(clazz);
+    }
   }
 
   /**
