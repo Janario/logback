@@ -103,7 +103,11 @@ public class Loader {
    * @return
    */
   public static URL getResourceBySelfClassLoader(String resource) {
-    return getResource(resource, getClassLoaderOfClass(Loader.class));
+    URL url = getResource(resource, getTCL());
+    if (url == null) {
+      url = getResource(resource, getClassLoaderOfClass(Loader.class));
+    }
+    return url;
   }
 
   // private static URL getResourceByTCL(String resource) {
